@@ -60,3 +60,10 @@ reports/*.html
 **/company_*
 **/purina_*
 *.vault
+
+# Decrypted SOPS secrets - only ciphertext (*.enc.yaml) may be committed
+config/secrets.yaml
+config/secrets.json
+config/*.dec.yaml
+config/*.dec.json
+.sops.yaml
