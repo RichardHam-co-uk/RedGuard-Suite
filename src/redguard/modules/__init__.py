@@ -1,10 +1,5 @@
-from reportlab.pdfgen import canvas
-from reportlab.lib.pagesizes import letter
+"""RedGuard attack-phase modules.
 
-# The ReportEngine class definition moved to its own file /modules/report/__init__.py
-# We just need to expose it here.
-from .report import ReportEngine 
-
-__all__ = [
-    'ReportEngine',
-]
+Each module exposes a ``run(config) -> dict`` entrypoint and is dispatched
+by :mod:`redguard.orchestrator` based on the active configuration.
+"""
