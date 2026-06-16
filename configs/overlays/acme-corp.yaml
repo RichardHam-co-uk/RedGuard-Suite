@@ -1,0 +1,39 @@
+# Per-company config overlay — EXAMPLE
+#
+# "Acme Corp" is a fictional company used to demonstrate the overlay pattern.
+# This file overrides only the keys that differ from default.yaml; everything
+# else (risk_matrix, unset safety controls, etc.) falls through to the default.
+#
+# SAFETY: Public template. All values are placeholders. A real engagement's
+# overlay lives in the private internal/ repo, never here.
+
+engagement:
+  company: "acme-corp"
+  environment: "staging"
+  authorized_window: "2026-07-01T09:00Z/2026-07-01T17:00Z"
+
+# Engagement-specific scope. Still placeholders in the public repo.
+targets:
+  - "app.staging.example.com"
+  - "api.staging.example.com"
+
+# Acme's engagement exercises the scanning and LLM modules in addition to the
+# defaults.
+modules:
+  recon: true
+  scan: true
+  llm_garak: true
+  report: true
+
+safety:
+  # Active testing authorised for the staging window above per signed RoE.
+  dry_run: false
+  stop_on_prod: true
+  exclusions:
+    - "payments.staging.example.com"
+    - "*.prod.example.com"
+
+rules_of_engagement:
+  approved_by: "REPLACE_IN_INTERNAL_REPO"
+  deconfliction_contact: "appsec@example.com"
+  emergency_stop_contact: "soc@example.com"
