@@ -1,0 +1,31 @@
+#!/bin/bash
+# RedGuard Nightly Scan Scheduler
+# Managed by Ansible — do not edit manually
+
+RG_DIR={{ rg_install_dir }}
+VENV={{ rg_python_env }}
+REPORT_DIR={{ rg_report_dir }}
+DATE=$(date +%Y-%m-%d)
+TIMESTAMP=$(date +%Y%m%d-%H%M%S)
+
+export PATH="$VENV/bin:$PATH"
+cd "$RG_DIR" || exit 1
+
+mkdir -p "$REPORT_DIR/$DATE"
+
+for SCAN_TYPE in {{ rg_scan_types | join(" ") }}; do
+    echo "[$TIMESTAMP] Starting $SCAN_TYPE scan..."
+    if python3 -m redguard scan "$SCAN_TYPE" --output "$REPORT_DIR/$DATE/${SCAN_TYPE}-results.json"; then
+        echo "[$TIMESTAMP] $SCAN_TYPE scan completed"
+    else
+        echo "[$TIMESTAMP] $SCAN_TYPE scan failed (exit: $?)"
+    fi
+done
+
+# Push results to DefectDojo if configured
+if [ -n "{{ rg_defectdojo_url }}" ] && [ -n "{{ rg_defectdojo_api_key }}" ]; then
+    echo "[$TIMESTAMP] Pushing findings to DefectDojo..."
+    python3 -m redguard report --push-dojo         --dojo-url "{{ rg_defectdojo_url }}"         --dojo-key "{{ rg_defectdojo_api_key }}"         --report-dir "$REPORT_DIR/$DATE"
+fi
+
+echo "[$TIMESTAMP] Scheduler run complete."

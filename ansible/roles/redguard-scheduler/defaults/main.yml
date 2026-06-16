@@ -1,0 +1,14 @@
+---
+# RedGuard Scheduler Defaults
+rg_install_dir: /opt/redguard
+rg_python_env: /opt/redguard/venv
+rg_scan_types:
+  - network
+  - web
+  - ad
+  - ot_ics
+  - garak
+rg_default_targets: []
+rg_report_dir: /var/lib/redguard/reports
+rg_defectdojo_url: ""
+rg_defectdojo_api_key: ""

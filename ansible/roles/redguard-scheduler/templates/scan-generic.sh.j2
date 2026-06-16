@@ -1,0 +1,8 @@
+#!/bin/bash
+# Generic scan wrapper for RedGuard
+# Usage: {{ rg_install_dir }}/scripts/scan-{{ scan_type }}.sh <target>
+
+VENV={{ rg_python_env }}
+export PATH="$VENV/bin:$PATH"
+
+exec python3 -m redguard scan "{{ scan_type }}" "$@"
