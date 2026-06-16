@@ -1,0 +1,20 @@
+# SOPS configuration — copy to `.sops.yaml` and replace the placeholder public
+# keys with each operator's real `age1...` PUBLIC key (age-keygen prints it).
+#
+# Only PUBLIC keys belong here. Never put an AGE-SECRET-KEY-... value in this file.
+# `.sops.yaml` is git-ignored by default; commit it only if your team policy
+# allows publishing the recipient list.
+#
+# See config/encrypted-config.md for the full workflow.
+
+creation_rules:
+  # Any secrets file under config/ is encrypted to the operators below.
+  - path_regex: config/secrets\.(enc\.)?ya?ml$
+    age: >-
+      age1exampleoperatoraaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaq,
+      age1exampleoperatorbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbq
+
+  - path_regex: config/secrets\.(enc\.)?json$
+    age: >-
+      age1exampleoperatoraaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaq,
+      age1exampleoperatorbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbq
