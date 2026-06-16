@@ -1,0 +1,17 @@
+---
+- name: Deploy RedGuard Engagement Scheduler
+  hosts: redguard_hosts
+  become: yes
+  roles:
+    - redguard-scheduler
+
+  post_tasks:
+    - name: Verify scheduler installation
+      ansible.builtin.stat:
+        path: "{{ rg_install_dir }}/scripts/redguard-scheduler.sh"
+      register: scheduler_check
+
+    - name: Report installation status
+      ansible.builtin.debug:
+        msg: "RedGuard scheduler deployed to {{ inventory_hostname }}"
+      when: scheduler_check.stat.exists

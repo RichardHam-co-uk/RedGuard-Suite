@@ -1,0 +1,43 @@
+---
+# RedGuard Engagement Scheduler
+
+- name: Create RedGuard directories
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+  loop:
+    - "{{ rg_install_dir }}"
+    - "{{ rg_report_dir }}"
+
+- name: Install Python dependencies
+  ansible.builtin.pip:
+    requirements: "{{ rg_install_dir }}/requirements.txt"
+    virtualenv: "{{ rg_python_env }}"
+    virtualenv_command: python3 -m venv
+
+- name: Deploy scan scripts
+  ansible.builtin.template:
+    src: scan-{{ item }}.sh.j2
+    dest: "{{ rg_install_dir }}/scripts/scan-{{ item }}.sh"
+    mode: '0755'
+  loop: "{{ rg_scan_types }}"
+
+- name: Deploy cron-based scheduler
+  ansible.builtin.template:
+    src: redguard-scheduler.sh.j2
+    dest: "{{ rg_install_dir }}/scripts/redguard-scheduler.sh"
+    mode: '0755'
+
+- name: Install cron job
+  ansible.builtin.cron:
+    name: "redguard-{{ item.type }}"
+    minute: "{{ item.minute | default(0) }}"
+    hour: "{{ item.hour | default(2) }}"
+    weekday: "{{ item.weekday | default('*') }}"
+    job: "{{ rg_install_dir }}/scripts/{{ item.script }} > {{ rg_report_dir }}/{{ item.log }} 2>&1"
+  loop:
+    - { type: nightly-scan, script: redguard-scheduler.sh, log: scheduler-$(date +\\%Y\\%m\\%d).log, hour: 2 }
+    - { type: weekly-report, script: report.sh, log: weekly-report.log, hour: 3, weekday: 0 }
