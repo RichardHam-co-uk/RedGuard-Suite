@@ -1,0 +1,48 @@
+# Default config overlay
+#
+# Baseline values inherited by every engagement. Per-company overlays
+# (e.g. acme-corp.yaml) are layered on top of this file and override only the
+# keys they need.
+#
+# SAFETY: This is a public template. Use only safe placeholders here
+# (example.com, fictional names). Real values live in the private internal/ repo.
+
+# Engagement metadata. Overridden per company.
+engagement:
+  company: "default"
+  environment: "non-production"
+  # Authorised window for active testing. Empty means "not authorised yet".
+  authorized_window: ""
+
+# Targets in scope. Always placeholders in the public repo.
+targets:
+  - "example.com"
+
+# Which attack-phase modules run by default. Conservative defaults: passive
+# phases on, anything intrusive off until a company overlay opts in.
+modules:
+  recon: true
+  scan: false
+  llm_garak: false
+  report: true
+
+# Safety controls. dry_run MUST stay true unless a signed RoE authorises active
+# testing for the scoped window. stop_on_prod aborts if a production target is
+# detected.
+safety:
+  dry_run: true
+  stop_on_prod: true
+  # Out-of-scope hosts that must never be touched, even if discovered.
+  exclusions:
+    - "*.example.org"
+
+# Risk matrix dimensions used by the report engine.
+risk_matrix:
+  impact_levels: ["Low", "Medium", "High", "Critical"]
+  likelihood_levels: ["Rare", "Possible", "Likely", "Almost Certain"]
+
+# Rules of Engagement and deconfliction contacts. Placeholders only.
+rules_of_engagement:
+  approved_by: "REPLACE_IN_INTERNAL_REPO"
+  deconfliction_contact: "security-team@example.com"
+  emergency_stop_contact: "soc@example.com"
