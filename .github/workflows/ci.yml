@@ -69,7 +69,7 @@ jobs:
       - name: Run bandit
         run: bandit -r src/ -c pyproject.toml
       - name: Check for secrets
-        uses: trufflesecurity/trufflehog@v3.94.3
+        uses: trufflesecurity/trufflehog@v3.95.6
         with:
           extra_args: --only-verified
 
